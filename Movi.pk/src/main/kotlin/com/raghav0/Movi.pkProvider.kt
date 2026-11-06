@@ -5,16 +5,15 @@ import com.lagradost.cloudstream3.utils.*
 import org.jsoup.nodes.Element
 
 class MoviPkProvider : MainAPI() {
-    override var mainUrl = "https://movi.pk" // Apni target website ka URL yahan dein
+    override var mainUrl = "https://movi.pk"
     override var name = "MoviPk"
     override val hasMainPage = true
-    override var lang = "ur" // Language code (jaise urdu/english ke liye)
+    override var lang = "ur"
     override val supportedTypes = setOf(
         TvType.Movie,
         TvType.TvSeries
     )
 
-    // Main Page / Home Content load karne ke liye
     override suspend fun getMainPage(page: Int, request: HomePageRequest): HomePageResponse {
         val document = app.get(mainUrl).document
         val home = document.select("div.items").mapNotNull { it.toSearchResult() }
@@ -31,13 +30,11 @@ class MoviPkProvider : MainAPI() {
         }
     }
 
-    // Search functionality ke liye
     override suspend fun search(query: String): List<SearchResponse> {
         val document = app.get("$mainUrl/?s=$query").document
         return document.select("div.items").mapNotNull { it.toSearchResult() }
     }
 
-    // Movie/Series details page load karne ke liye
     override suspend fun load(url: String): LoadResponse {
         val document = app.get(url).document
         val title = document.selectFirst("h1")?.text() ?: "No Title"
@@ -50,25 +47,12 @@ class MoviPkProvider : MainAPI() {
         }
     }
 
-    // Video streams / links extract karne ke liye
     override suspend fun loadLinks(
         data: String,
         isCams: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val document = app.get(data).document
-        
-        // Yahan aap iframe ya video player links extract karne ka logic likhenge
-        // Misal ke taur par:
-        /*
-        document.select("iframe").forEach { iframe ->
-            val videoUrl = iframe.attr("src")
-            // loadExtractor(videoUrl, data, subtitleCallback, callback)
-        }
-        */
-
         return true
     }
 }
-

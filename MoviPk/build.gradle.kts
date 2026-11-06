@@ -1,10 +1,23 @@
-package com.raghav0
+plugins {
+    id("com.android.library")
+    kotlin("android")
+}
 
-import com.lagradost.cloudstream3.plugins.Plugin
-import android.content.Context
+android {
+    namespace = "com.raghav0.movipk"
+    compileSdk = 34
 
-class MoviPkPlugin : Plugin() {
-    override fun load(context: Context) {
-        registerMainAPI(MoviPkProvider())
+    defaultConfig {
+        minSdk = 21
+        targetSdk = 34
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }
